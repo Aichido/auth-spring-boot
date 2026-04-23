@@ -18,8 +18,9 @@
     <description>Spring Boot authentication backend</description>
 
     <properties>
-        <java.version>25</java.version>
+        <java.version>17</java.version>
         <jjwt.version>0.12.6</jjwt.version>
+        <sonar.organization>ichido</sonar.organization>
     </properties>
 
     <dependencies>
