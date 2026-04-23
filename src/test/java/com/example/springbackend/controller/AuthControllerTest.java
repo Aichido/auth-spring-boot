@@ -18,7 +18,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -79,7 +78,7 @@ class AuthControllerTest {
             "newpass"
         );
 
-        doNothing().when(authService).changePassword(eq(request), eq("user@example.com"));
+        doNothing().when(authService).changePassword(request, "user@example.com");
 
         mockMvc.perform(put("/api/auth/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
