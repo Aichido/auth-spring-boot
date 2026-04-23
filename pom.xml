@@ -95,10 +95,10 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <reports>
-                                <xml>true</xml>
-                                <html>true</html>
-                            </reports>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
                         </configuration>
                     </execution>
                     <execution>
