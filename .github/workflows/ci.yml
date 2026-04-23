@@ -35,4 +35,4 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B -Dsonar.projectKey=auth-spring-boot -Dsonar.organization=tahiry -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} sonar:sonar
+        run: mvn -B -Dsonar.projectKey=auth-spring-boot -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || github.repository_owner }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} sonar:sonar
