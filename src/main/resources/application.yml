@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:authdb;DB_CLOSE_DELAY=-1;MODE=LEGACY
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+
+app:
+  security:
+    master-key: ${MASTER_KEY:change-me-master-key-32-bytes-min}
+    jwt-secret: ${JWT_SECRET:change-me-jwt-secret-at-least-32-bytes}
+    jwt-expiration-ms: 3600000
