@@ -30,9 +30,11 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Run tests
-        run: mvn test
-      - name: Build and analyze
+      - name: Build and run tests
+        run: mvn -B clean verify
+
+      - name: SonarCloud analysis
+        if: ${{ secrets.SONAR_TOKEN != '' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B -Dsonar.projectKey=auth-spring-boot -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || github.repository_owner }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} sonar:sonar
