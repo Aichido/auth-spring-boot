@@ -1,12 +1,15 @@
 package com.example.springbackend.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.springbackend.dto.AuthRequest;
+import com.example.springbackend.dto.AuthResponse;
 import com.example.springbackend.dto.ChangePasswordRequest;
 import com.example.springbackend.entity.UserAccount;
 import com.example.springbackend.exception.InvalidOldPasswordException;
@@ -132,5 +135,40 @@ class AuthServiceTest {
 
         assertThrows(UserNotFoundException.class, () -> authService.changePassword(request, "missing@example.com"));
         verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldLoginSuccessfully() {
+        UserAccount user = new UserAccount("user@example.com", "encodedPass");
+        AuthRequest request = new AuthRequest("user@example.com", "password");
+
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(masterKeyPasswordService.matches("password", "encodedPass")).thenReturn(true);
+        when(jwtService.generateToken("user@example.com")).thenReturn("jwt-token");
+
+        AuthResponse response = authService.login(request);
+
+        assertEquals("jwt-token", response.token());
+        verify(jwtService).generateToken("user@example.com");
+    }
+
+    @Test
+    void shouldFailLoginWhenUserNotFound() {
+        AuthRequest request = new AuthRequest("missing@example.com", "password");
+
+        when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> authService.login(request));
+    }
+
+    @Test
+    void shouldFailLoginWhenPasswordIncorrect() {
+        UserAccount user = new UserAccount("user@example.com", "encodedPass");
+        AuthRequest request = new AuthRequest("user@example.com", "wrongpassword");
+
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(masterKeyPasswordService.matches("wrongpassword", "encodedPass")).thenReturn(false);
+
+        assertThrows(InvalidOldPasswordException.class, () -> authService.login(request));
     }
 }
