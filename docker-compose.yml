@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auth-spring-boot-app
+    ports:
+      - "${APP_PORT:-8081}:8081"
+    environment:
+      MASTER_KEY: ${MASTER_KEY:-change-me-master-key-32-bytes-min}
+      JWT_SECRET: ${JWT_SECRET:-change-me-jwt-secret-at-least-32-bytes}
+    restart: unless-stopped
